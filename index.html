@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Odoo 18 — Izacorp Sistemas de Grúas S.A.C.</title>
+<style>
+  :root {
+    --o-brand: #714B67;
+    --o-brand-hover: #5E3D56;
+    --o-teal: #017E84;
+    --o-teal-soft: #E6F4F4;
+    --o-bg: #F8F9FA;
+    --o-surface: #FFFFFF;
+    --o-border: #DEE2E6;
+    --o-text: #1F2937;
+    --o-muted: #6B7280;
+    --o-green: #10B981;
+    --o-green-dk: #047857;
+    --o-green-bg: #ECFDF5;
+    --o-amber: #F59E0B;
+    --o-amber-dk: #B45309;
+    --o-amber-bg: #FFFBEB;
+    --o-red: #EF4444;
+    --o-red-dk: #B91C1C;
+    --o-red-bg: #FEF2F2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--o-bg);
+    color: var(--o-text);
+    font-size: 13px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* 1. ODOO MAIN NAVBAR (46px) */
+  .o-navbar {
+    height: 46px;
+    background: var(--o-brand);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    flex-shrink: 0;
+    z-index: 50;
+  }
+  .o-nav-left { display: flex; align-items: center; gap: 4px; }
+  .o-app-grid-btn {
+    width: 34px; height: 34px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 6px; border: none; background: transparent; color: #fff;
+    cursor: pointer; font-size: 17px; transition: background 0.12s;
+  }
+  .o-app-grid-btn:hover { background: rgba(255,255,255,0.16); }
+  .o-app-brand {
+    font-weight: 700; font-size: 14.5px; color: #fff;
+    padding: 4px 10px 4px 4px; margin-right: 6px;
+    letter-spacing: -0.2px; white-space: nowrap;
+  }
+  .o-nav-menus { display: flex; align-items: center; gap: 2px; }
+  .o-menu-item {
+    background: transparent; border: none; color: rgba(255,255,255,0.86);
+    padding: 6px 11px; border-radius: 5px; font-size: 12.5px; font-weight: 500;
+    cursor: pointer; white-space: nowrap; transition: all 0.12s;
+  }
+  .o-menu-item:hover { background: rgba(255,255,255,0.12); color: #fff; }
+  .o-menu-item.active { background: rgba(255,255,255,0.2); color: #fff; font-weight: 600; }
+
+  .o-systray { display: flex; align-items: center; gap: 10px; }
+  .o-sys-pill {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.16);
+    padding: 3px 9px; border-radius: 99px; font-size: 11.5px; font-weight: 600;
+    white-space: nowrap;
+  }
+  .o-sys-btn {
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.22);
+    color: #fff; padding: 5px 10px; border-radius: 5px; font-size: 12px; font-weight: 600;
+    cursor: pointer; display: flex; align-items: center; gap: 5px; white-space: nowrap;
+  }
+  .o-sys-btn:hover { background: rgba(255,255,255,0.25); }
+  .o-sys-btn.tour { background: #10B981; border-color: #10B981; font-weight: 700; }
+  .o-sys-btn.tour:hover { background: #059669; }
+  .o-user-wrap { position: relative; display: flex; align-items: center; gap: 6px; }
+  .o-avatar {
+    width: 26px; height: 26px; border-radius: 5px;
+    background: #017E84; color: #fff; font-weight: 800; font-size: 11px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .o-user-select {
+    background: rgba(0,0,0,0.22); color: #fff; border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 5px; padding: 4px 8px; font-size: 12px; font-weight: 600; cursor: pointer;
+  }
+  .o-user-select option { color: var(--o-text); background: #fff; }
+  .o-badge-dot {
+    background: #EF4444; color: #fff; font-size: 10px; font-weight: 800;
+    padding: 1px 5px; border-radius: 99px;
+  }
+
+  /* 2. ODOO CONTROL PANEL */
+  .o-control-panel {
+    background: var(--o-surface);
+    border-bottom: 1px solid var(--o-border);
+    padding: 8px 16px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+  .o-cp-left { display: flex; align-items: center; gap: 8px; }
+  .o-btn {
+    padding: 6px 12px; border-radius: 5px; font-size: 12.5px; font-weight: 600;
+    cursor: pointer; border: 1px solid var(--o-border); background: #fff; color: var(--o-text);
+    display: inline-flex; align-items: center; gap: 5px; transition: all 0.1s; white-space: nowrap;
+  }
+  .o-btn:hover { background: #F3F4F6; }
+  .o-btn-primary { background: var(--o-brand); border-color: var(--o-brand); color: #fff; }
+  .o-btn-primary:hover { background: var(--o-brand-hover); }
+  .o-btn-teal { background: var(--o-teal); border-color: var(--o-teal); color: #fff; }
+  .o-btn-teal:hover { background: #01686D; }
+  .o-btn-danger { background: var(--o-red-bg); border-color: #FCA5A5; color: var(--o-red-dk); }
+  .o-breadcrumb { font-size: 13.5px; font-weight: 600; color: var(--o-text); margin-left: 4px; white-space: nowrap; }
+  .o-breadcrumb span { color: var(--o-muted); font-weight: 400; }
+
+  .o-search-box {
+    display: flex; align-items: center; gap: 6px;
+    border: 1px solid var(--o-border); border-radius: 5px;
+    padding: 4px 10px; background: #fff; max-width: 520px; width: 100%; justify-self: center;
+  }
+  .o-search-box:focus-within { border-color: var(--o-teal); box-shadow: 0 0 0 2px rgba(1,126,132,0.12); }
+  .o-search-chip {
+    background: #EEF2FF; color: #3730A3; border: 1px solid #C7D2FE;
+    padding: 1px 7px; border-radius: 4px; font-size: 11px; font-weight: 600;
+    cursor: pointer; white-space: nowrap;
+  }
+  .o-search-chip.active { background: var(--o-teal); color: #fff; border-color: var(--o-teal); }
+  .o-search-input {
+    border: none; outline: none; flex: 1; font-size: 12.5px; min-width: 110px; background: transparent;
+  }
+
+  .o-cp-right { display: flex; align-items: center; gap: 8px; }
+  .o-pager { font-size: 12px; color: var(--o-muted); font-weight: 500; white-space: nowrap; }
+  .o-view-switcher { display: flex; border: 1px solid var(--o-border); border-radius: 5px; overflow: hidden; }
+  .o-view-btn {
+    border: none; background: #fff; padding: 5px 9px; cursor: pointer;
+    font-size: 13px; color: var(--o-muted); border-right: 1px solid var(--o-border);
+  }
+  .o-view-btn:last-child { border-right: none; }
+  .o-view-btn.active { background: var(--o-teal-soft); color: var(--o-teal); font-weight: 700; }
+
+  /* 3. MAIN SPLIT SHELL (WORKSPACE + CHATTER) */
+  .o-shell {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 315px;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .o-main {
+    overflow-y: auto;
+    padding: 14px 18px 70px;
+  }
+  .o-chatter {
+    background: var(--o-surface);
+    border-left: 1px solid var(--o-border);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  /* KANBAN CARDS (ODOO STYLE) */
+  .o-kanban-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; flex-wrap: wrap; }
+  .o-pill-group { display: flex; gap: 6px; flex-wrap: wrap; }
+  .o-filter-pill {
+    padding: 4px 11px; border-radius: 99px; border: 1px solid var(--o-border);
+    background: #fff; font-size: 11.5px; font-weight: 600; cursor: pointer; color: var(--o-muted);
+  }
+  .o-filter-pill.active { background: var(--o-brand); color: #fff; border-color: var(--o-brand); }
+
+  .o-kanban-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(248px, 1fr));
+    gap: 10px;
+  }
+  .o-kcard {
+    background: #fff;
+    border: 1px solid var(--o-border);
+    border-radius: 6px;
+    padding: 11px 12px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    transition: box-shadow 0.14s, transform 0.12s;
+  }
+  .o-kcard:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); transform: translateY(-1px); }
+  .o-kcard.VERDE { border-left: 4px solid var(--o-green); }
+  .o-kcard.AMARILLO { border-left: 4px solid var(--o-amber); }
+  .o-kcard.ROJO { border-left: 4px solid var(--o-red); background: #FFFDFD; }
+  .o-khead { display: flex; justify-content: space-between; align-items: center; }
+  .o-kcode { font-family: ui-monospace, Consolas, monospace; font-size: 11px; font-weight: 700; color: var(--o-muted); }
+  .o-ktitle { font-weight: 700; font-size: 13px; color: var(--o-text); line-height: 1.3; }
+  .o-kmeta { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--o-muted); }
+  .o-gauge { height: 5px; background: #E5E7EB; border-radius: 99px; overflow: hidden; }
+  .o-gauge-fill { height: 100%; transition: width 0.25s; }
+  .o-kfoot { display: flex; justify-content: space-between; align-items: center; padding-top: 4px; border-top: 1px solid #F3F4F6; gap: 4px; }
+  .o-btn-xs {
+    padding: 3px 8px; border-radius: 4px; border: 1px solid var(--o-border);
+    background: #fff; font-size: 11px; font-weight: 600; cursor: pointer; color: var(--o-text);
+  }
+  .o-btn-xs:hover { background: #F3F4F6; }
+  .o-btn-xs.teal { background: var(--o-teal-soft); color: var(--o-teal); border-color: #B2DFDB; }
+  .o-btn-xs.red { background: var(--o-red-bg); color: var(--o-red-dk); border-color: #FECACA; }
+
+  .o-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 7px; border-radius: 99px; font-size: 10.5px; font-weight: 700;
+  }
+  .o-tag.VERDE, .o-tag.ok { background: var(--o-green-bg); color: var(--o-green-dk); }
+  .o-tag.AMARILLO, .o-tag.warn { background: var(--o-amber-bg); color: var(--o-amber-dk); }
+  .o-tag.ROJO, .o-tag.err { background: var(--o-red-bg); color: var(--o-red-dk); }
+  .o-tag.info { background: #EFF6FF; color: #1D4ED8; }
+  .o-tag.plum { background: #F5EEF4; color: var(--o-brand); }
+
+  /* ODOO LIST VIEW TABLE */
+  .o-list-wrap { background: #fff; border: 1px solid var(--o-border); border-radius: 6px; overflow: hidden; }
+  table.o-tbl { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  table.o-tbl th {
+    background: #F9FAFB; color: var(--o-muted); font-weight: 700; font-size: 11px;
+    text-transform: uppercase; padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--o-border);
+  }
+  table.o-tbl td { padding: 9px 12px; border-bottom: 1px solid #F3F4F6; vertical-align: middle; }
+  table.o-tbl tr.clickable { cursor: pointer; }
+  table.o-tbl tr.clickable:hover td { background: #F5F3FF; }
+
+  /* ODOO FORM SHEET + STATUSBAR PIPELINE + SMART BUTTONS */
+  .o-form-wrap { display: grid; grid-template-columns: 240px 1fr; gap: 14px; align-items: start; }
+  .o-record-list { background: #fff; border: 1px solid var(--o-border); border-radius: 6px; overflow: hidden; }
+  .o-rec-item {
+    padding: 10px 12px; border-bottom: 1px solid #F3F4F6; cursor: pointer;
+    display: flex; flex-direction: column; gap: 3px;
+  }
+  .o-rec-item:hover { background: #F9FAFB; }
+  .o-rec-item.active { background: #F5EEF4; border-left: 3px solid var(--o-brand); }
+
+  .o-sheet {
+    background: #fff;
+    border: 1px solid var(--o-border);
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    overflow: hidden;
+  }
+  .o-statusbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 16px; background: #F9FAFB; border-bottom: 1px solid var(--o-border);
+    gap: 10px; flex-wrap: wrap;
+  }
+  .o-action-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+  .o-pipeline { display: flex; align-items: center; }
+  .o-stage {
+    position: relative; padding: 5px 12px 5px 16px; font-size: 11.5px; font-weight: 600;
+    color: var(--o-muted); background: #E5E7EB; margin-right: 2px;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 0 100%, 8px 50%);
+  }
+  .o-stage:first-child { padding-left: 12px; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 0 100%); border-radius: 4px 0 0 4px; }
+  .o-stage.done { background: #D1FAE5; color: #065F46; }
+  .o-stage.current { background: var(--o-brand); color: #fff; }
+
+  .o-sheet-body { padding: 18px 22px; }
+  .o-sheet-head {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 16px; margin-bottom: 16px; flex-wrap: wrap;
+  }
+  .o-doc-title { font-size: 21px; font-weight: 800; color: var(--o-text); letter-spacing: -0.3px; }
+  .o-doc-sub { font-size: 12px; color: var(--o-muted); margin-top: 2px; }
+
+  .o-smart-btns { display: flex; border: 1px solid var(--o-border); border-radius: 5px; overflow: hidden; }
+  .o-smart-btn {
+    background: #fff; border: none; border-right: 1px solid var(--o-border);
+    padding: 6px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px;
+    text-align: left; transition: background 0.1s;
+  }
+  .o-smart-btn:last-child { border-right: none; }
+  .o-smart-btn:hover { background: #F9FAFB; }
+  .o-smart-val { font-weight: 800; font-size: 13px; color: var(--o-brand); display: block; }
+  .o-smart-lbl { font-size: 10.5px; color: var(--o-muted); display: block; white-space: nowrap; }
+
+  .o-fields-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 28px; margin-bottom: 16px;
+  }
+  .o-field-row {
+    display: grid; grid-template-columns: 145px 1fr; align-items: center;
+    padding-bottom: 5px; border-bottom: 1px solid #F1F5F9; gap: 8px;
+  }
+  .o-flbl { font-size: 12px; font-weight: 700; color: var(--o-text); }
+  .o-fval { font-size: 12.5px; color: #374151; }
+
+  .o-notebook-tabs { display: flex; border-bottom: 1px solid var(--o-border); margin-bottom: 12px; gap: 4px; }
+  .o-nb-tab {
+    padding: 7px 14px; font-size: 12px; font-weight: 600; color: var(--o-muted);
+    background: transparent; border: none; border-bottom: 2px solid transparent; cursor: pointer;
+  }
+  .o-nb-tab.active { color: var(--o-brand); border-bottom-color: var(--o-brand); }
+
+  /* SWITCH TOGGLE */
+  .o-switch-wrap {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #FFFBEB; border: 1px solid #FDE68A; padding: 10px 14px;
+    border-radius: 6px; cursor: pointer; font-weight: 600; color: #92400E;
+  }
+  .o-switch-wrap input { width: 17px; height: 17px; accent-color: var(--o-teal); cursor: pointer; }
+
+  /* BI DASHBOARDS (CAP 10 & CAP 11) */
+  .o-bi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  .o-bi-card {
+    background: #fff; border: 1px solid var(--o-border); border-radius: 6px; padding: 14px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .o-bi-num { font-size: 24px; font-weight: 800; color: var(--o-brand); }
+  .o-prog-row { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--o-muted); }
+  .o-prog-track { flex: 1; height: 7px; background: #E5E7EB; border-radius: 99px; overflow: hidden; }
+  .o-prog-fill { height: 100%; border-radius: 99px; background: var(--o-teal); }
+
+  .o-mod-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .o-mod-card {
+    background: #fff; border: 1.5px solid var(--o-border); border-radius: 6px; padding: 14px;
+    display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  }
+  .o-mod-card.installed { border-color: var(--o-green); background: #F0FDF4; }
+
+  /* CHATTER RIGHT PANEL */
+  .o-chatter-role {
+    padding: 10px 12px; background: #F9FAFB; border-bottom: 1px solid var(--o-border);
+  }
+  .o-perm-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+  .o-chip {
+    font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px;
+  }
+  .o-chip.allow { background: var(--o-green-bg); color: var(--o-green-dk); }
+  .o-chip.deny { background: var(--o-red-bg); color: var(--o-red-dk); }
+  .o-chatter-actions {
+    display: flex; gap: 6px; padding: 8px 12px; border-bottom: 1px solid var(--o-border);
+  }
+  .o-chatter-feed {
+    flex: 1; overflow-y: auto; padding: 10px 12px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .o-msg { display: flex; gap: 8px; align-items: flex-start; }
+  .o-msg-av {
+    width: 26px; height: 26px; border-radius: 5px; font-size: 10px; font-weight: 800; color: #fff;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;
+  }
+  .o-msg-body { font-size: 11.5px; line-height: 1.38; }
+  .o-msg-meta { font-size: 10.5px; color: var(--o-muted); margin-bottom: 1px; }
+
+  /* APP LAUNCHER OVERLAY (⊞) */
+  .o-app-drawer {
+    position: fixed; inset: 46px 0 0 0;
+    background: linear-gradient(155deg, #F3EDF2 0%, #EDF5F6 100%);
+    z-index: 90; display: none; align-items: center; justify-content: center; padding: 24px;
+  }
+  .o-app-drawer.show { display: flex; }
+  .o-apps-container { max-width: 780px; width: 100%; }
+  .o-apps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+  .o-app-tile {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    cursor: pointer; padding: 14px 10px; border-radius: 10px; transition: background 0.14s, transform 0.12s;
+  }
+  .o-app-tile:hover { background: rgba(255,255,255,0.75); transform: translateY(-2px); }
+  .o-app-icon {
+    width: 64px; height: 64px; border-radius: 12px; background: #fff;
+    box-shadow: 0 4px 12px rgba(15,23,42,0.08);
+    display: flex; align-items: center; justify-content: center; font-size: 28px;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+  .o-app-lbl { font-weight: 700; font-size: 13px; color: var(--o-text); text-align: center; }
+
+  /* FLOATING 60s TOUR STEPPER DOCK (BOTTOM CENTER) */
+  .o-tour-dock {
+    position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+    background: #111827; color: #fff; border-radius: 10px;
+    padding: 9px 14px; display: none; align-items: center; gap: 12px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.28); z-index: 80; max-width: 92vw;
+  }
+  .o-tour-dock.show { display: flex; }
+  .o-tour-step { background: var(--o-brand); padding: 2px 8px; border-radius: 99px; font-size: 11px; font-weight: 800; white-space: nowrap; }
+  .o-tour-txt { font-size: 12px; color: #E5E7EB; }
+
+  /* TOAST & MODAL */
+  .o-toast {
+    position: fixed; top: 58px; right: 332px; z-index: 120;
+    padding: 10px 14px; border-radius: 6px; font-size: 12px; font-weight: 600;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15); display: none; max-width: 420px;
+  }
+  .o-toast.show { display: flex; align-items: center; gap: 8px; }
+  .o-toast.ok { background: #065F46; color: #fff; }
+  .o-toast.err { background: #991B1B; color: #fff; }
+  .o-toast.info { background: #1E3A8A; color: #fff; }
+
+  .o-modal-bg {
+    position: fixed; inset: 0; background: rgba(17,24,39,0.52);
+    display: none; align-items: center; justify-content: center; z-index: 150;
+  }
+  .o-modal-bg.show { display: flex; }
+  .o-modal {
+    background: #fff; border-radius: 8px; width: 420px; max-width: 92vw;
+    box-shadow: 0 20px 44px rgba(0,0,0,0.22); overflow: hidden;
+  }
+  .o-modal-head {
+    padding: 12px 16px; border-bottom: 1px solid var(--o-border);
+    display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 14px;
+  }
+  .o-modal-body { padding: 16px; }
+  .o-modal-foot { padding: 10px 16px; background: #F9FAFB; border-top: 1px solid var(--o-border); display: flex; justify-content: flex-end; gap: 8px; }
+
+  .o-qr-box {
+    position: relative; border: 2px dashed #1F2937; border-radius: 6px;
+    padding: 12px; display: flex; align-items: center; gap: 14px; overflow: hidden; background: #fff;
+  }
+  .o-laser {
+    position: absolute; left: 0; right: 0; height: 2px; background: #EF4444;
+    box-shadow: 0 0 8px #EF4444; animation: scan 2.1s infinite ease-in-out;
+  }
+  @keyframes scan { 0%,100% { top: 8px; } 50% { top: calc(100% - 10px); } }
+
+  .o-input-grp { margin-bottom: 10px; }
+  .o-input-grp label { display: block; font-size: 11.5px; font-weight: 700; color: var(--o-muted); margin-bottom: 4px; }
+  .o-input-grp input, .o-input-grp select {
+    width: 100%; padding: 7px 9px; border: 1px solid var(--o-border); border-radius: 5px; font-size: 12.5px;
+  }
+
+  @media (max-width: 1060px) {
+    .o-shell { grid-template-columns: 1fr; }
+    .o-chatter { display: none; }
+    .o-form-wrap { grid-template-columns: 1fr; }
+    .o-bi-grid, .o-mod-grid, .o-fields-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 1. ODOO NAVBAR -->
+<header class="o-navbar">
+  <div class="o-nav-left">
+    <button class="o-app-grid-btn" title="Aplicaciones Odoo" onclick="toggleAppDrawer()">⊞</button>
+    <span class="o-app-brand" id="navAppTitle">Inventario QR</span>
+    <nav class="o-nav-menus" id="navMenus">
+      <button class="o-menu-item active" onclick="openApp('inventario')">Gavetas Kanban</button>
+      <button class="o-menu-item" onclick="openApp('kits')">Kits BoM &amp; SST</button>
+      <button class="o-menu-item" onclick="openApp('compras')">Compras Base A</button>
+      <button class="o-menu-item" onclick="openApp('tableros')">Tableros Cap. 10</button>
+    </nav>
+  </div>
+  <div class="o-systray">
+    <div class="o-sys-pill" title="Tiempo Ciclo DAP TO-BE">⏱ DAP: 50 min · 0h calle</div>
+    <div class="o-sys-pill" style="cursor:pointer;" onclick="openApp('compras')" title="Pendientes">🔔 <span class="o-badge-dot" id="alertBell">2</span></div>
+    <div class="o-user-wrap">
+      <div class="o-avatar" id="sysAvatar">ED</div>
+      <select class="o-user-select" id="userSelect" onchange="switchUser(this.value)">
+        <option value="edgar">Edgar (#5 Almacén)</option>
+        <option value="edwin">Edwin Copy (#3 Planif.)</option>
+        <option value="angel">Ángel (#4 Sup. SST)</option>
+        <option value="victor">Víctor Hugo (#2 Compras)</option>
+        <option value="jhon">Jhon Escalante (#1 Gerencia)</option>
+        <option value="sercoint">SERCOINT (Contabilidad)</option>
+      </select>
+    </div>
+    <button class="o-sys-btn tour" onclick="startTour()">▶ Tour 60s</button>
+    <button class="o-sys-btn" title="Reiniciar Demo" onclick="resetDemo()">↺</button>
+  </div>
+</header>
+
+<!-- 2. ODOO CONTROL PANEL -->
+<section class="o-control-panel">
+  <div class="o-cp-left" id="cpActions"></div>
+  <div class="o-search-box" id="cpSearchWrap">
+    <span style="color:var(--o-muted);">🔍</span>
+    <span class="o-search-chip active" id="chipAll" onclick="setStatusFilter('ALL')">Todos</span>
+    <span class="o-search-chip" id="chipRop" onclick="setStatusFilter('ROP')">En Reorden</span>
+    <span class="o-search-chip" id="chipOk" onclick="setStatusFilter('OK')">Stock OK</span>
+    <input class="o-search-input" id="searchInput" placeholder="Buscar código, material o proveedor..." oninput="renderMain()">
+  </div>
+  <div class="o-cp-right">
+    <span class="o-pager" id="cpPager">1–8 / 24</span>
+    <div class="o-view-switcher" id="cpViews">
+      <button class="o-view-btn active" id="vBtnKanban" title="Vista Kanban" onclick="setViewMode('kanban')">☷</button>
+      <button class="o-view-btn" id="vBtnList" title="Vista Lista" onclick="setViewMode('list')">☰</button>
+    </div>
+  </div>
+</section>
+
+<!-- 3. SHELL: WORKSPACE + ODOO CHATTER -->
+<div class="o-shell">
+  <main class="o-main" id="mainWorkspace"></main>
+
+  <aside class="o-chatter">
+    <div class="o-chatter-role">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <strong style="font-size:12.5px;" id="chatterUserTitle">Edgar · Almacén Ate</strong>
+        <span class="o-tag plum">Odoo 18</span>
+      </div>
+      <div class="o-perm-chips" id="chatterPerms"></div>
+    </div>
+    <div class="o-chatter-actions">
+      <button class="o-btn-xs teal" onclick="addCustomNote()">📝 Nota Rápida</button>
+      <button class="o-btn-xs" onclick="openApp('tableros')">📊 6 Reportes</button>
+    </div>
+    <div class="o-chatter-feed" id="chatterFeed"></div>
+  </aside>
+</div>
+
+<!-- APP LAUNCHER OVERLAY (⊞) -->
+<div class="o-app-drawer" id="appDrawer" onclick="if(event.target===this)toggleAppDrawer()">
+  <div class="o-apps-container">
+    <div style="text-align:center;margin-bottom:22px;">
+      <span style="font-size:12px;font-weight:700;color:var(--o-brand);letter-spacing:0.6px;text-transform:uppercase;">Odoo Estándar Cloud · Izacorp Sistemas de Grúas S.A.C.</span>
+    </div>
+    <div class="o-apps-grid">
+      <div class="o-app-tile" onclick="openAppFromDrawer('inventario')">
+        <div class="o-app-icon" style="color:#017E84;">📦</div>
+        <div class="o-app-lbl">Inventario QR</div>
+        <span class="o-tag ok">Fase 1 · Activo</span>
+      </div>
+      <div class="o-app-tile" onclick="openAppFromDrawer('kits')">
+        <div class="o-app-icon" style="color:#714B67;">🧰</div>
+        <div class="o-app-lbl">Kits &amp; SST 1x1</div>
+        <span class="o-tag ok">Fase 1 · Activo</span>
+      </div>
+      <div class="o-app-tile" onclick="openAppFromDrawer('compras')">
+        <div class="o-app-icon" style="color:#2563EB;">🛒</div>
+        <div class="o-app-lbl">Compras Base A</div>
+        <span class="o-tag ok">Fase 1 · Activo</span>
+      </div>
+      <div class="o-app-tile" onclick="openAppFromDrawer('tableros')">
+        <div class="o-app-icon" style="color:#059669;">📊</div>
+        <div class="o-app-lbl">Tableros Cap. 10</div>
+        <span class="o-tag ok">Fase 1 · Activo</span>
+      </div>
+      <div class="o-app-tile" onclick="previewFutureApp(2, 'Ventas / CRM Grúas ABUS')">
+        <div class="o-app-icon" style="color:#D97706;">📈</div>
+        <div class="o-app-lbl">Ventas / CRM</div>
+        <span class="o-tag plum">Fase 2 · M7–12</span>
+      </div>
+      <div class="o-app-tile" onclick="previewFutureApp(2, 'Importaciones ABUS Alemania')">
+        <div class="o-app-icon" style="color:#4F46E5;">🚢</div>
+        <div class="o-app-lbl">Import. ABUS (16s)</div>
+        <span class="o-tag plum">Fase 2 · M7–12</span>
+      </div>
+      <div class="o-app-tile" onclick="previewFutureApp(3, 'Contabilidad & SUNAT CPE')">
+        <div class="o-app-icon" style="color:#475569;">🏛️</div>
+        <div class="o-app-lbl">SUNAT / Contab.</div>
+        <span class="o-tag info">Fase 3 · Año 2+</span>
+      </div>
+      <div class="o-app-tile" onclick="openAppFromDrawer('compras');openNewPoModal()">
+        <div class="o-app-icon" style="color:#DC2626;">⚖️</div>
+        <div class="o-app-lbl">Cierre SERCOINT</div>
+        <span class="o-tag ok">Enlace Mensual</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOUR FLOATING DOCK -->
+<div class="o-tour-dock" id="tourDock">
+  <span class="o-tour-step" id="tourBadge">1 / 6</span>
+  <span class="o-tour-txt" id="tourTxt"></span>
+  <div style="display:flex;gap:5px;flex-shrink:0;">
+    <button class="o-btn-xs" style="background:#374151;color:#fff;border-color:#4B5563;" onclick="prevTour()">◀</button>
+    <button class="o-btn-xs" style="background:#10B981;color:#fff;border-color:#10B981;" onclick="runTourAction()">⚡ Ejecutar</button>
+    <button class="o-btn-xs" style="background:#714B67;color:#fff;border-color:#714B67;" onclick="nextTour()">▶</button>
+    <button class="o-btn-xs" style="background:#1F2937;color:#9CA3AF;border-color:#374151;" onclick="closeTour()">✕</button>
+  </div>
+</div>
+
+<!-- TOAST NOTIFICATION -->
+<div class="o-toast" id="oToast"></div>
+
+<!-- MODAL QR XPRINTER -->
+<div class="o-modal-bg" id="qrModalBg" onclick="if(event.target===this)closeModal('qrModalBg')">
+  <div class="o-modal">
+    <div class="o-modal-head">
+      <span>📷 Escáner QR Xprinter · Taller Ate</span>
+      <button class="o-btn-xs" onclick="closeModal('qrModalBg')">✕</button>
+    </div>
+    <div class="o-modal-body">
+      <div class="o-qr-box">
+        <div class="o-laser"></div>
+        <svg width="76" height="76" viewBox="0 0 82 82" style="flex-shrink:0;">
+          <rect width="82" height="82" fill="#fff"/>
+          <rect x="4" y="4" width="22" height="22" fill="none" stroke="#111" stroke-width="4"/><rect x="11" y="11" width="8" height="8" fill="#111"/>
+          <rect x="56" y="4" width="22" height="22" fill="none" stroke="#111" stroke-width="4"/><rect x="63" y="11" width="8" height="8" fill="#111"/>
+          <rect x="4" y="56" width="22" height="22" fill="none" stroke="#111" stroke-width="4"/><rect x="11" y="63" width="8" height="8" fill="#111"/>
+          <rect x="33" y="9" width="14" height="6" fill="#111"/><rect x="28" y="28" width="16" height="14" fill="#111"/>
+          <rect x="52" y="34" width="22" height="8" fill="#111"/><rect x="36" y="54" width="16" height="16" fill="#111"/>
+          <rect x="60" y="58" width="14" height="14" fill="#111"/>
+        </svg>
+        <div>
+          <div style="font-family:Consolas,monospace;font-weight:800;font-size:13px;" id="qrCodeLbl">BIN-14</div>
+          <div style="font-weight:700;font-size:13px;margin:2px 0;" id="qrNameLbl">Pernos G8.8 M12x40</div>
+          <div style="font-size:11px;color:var(--o-muted);" id="qrMetaLbl">ROP 15 · EFC S.A.C.</div>
+        </div>
+      </div>
+    </div>
+    <div class="o-modal-foot">
+      <button class="o-btn" onclick="closeModal('qrModalBg')">Cerrar</button>
+      <button class="o-btn o-btn-teal" onclick="scanQrTrigger()">⚡ Leer QR y Disparar SOLPED</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NUEVA OC (REGLA 1 CLIP LEVEL S/ 500) -->
+<div class="o-modal-bg" id="poModalBg" onclick="if(event.target===this)closeModal('poModalBg')">
+  <div class="o-modal">
+    <div class="o-modal-head">
+      <span>🛒 Nueva Solicitud de Compra (Regla 1 · Clip S/ 500)</span>
+      <button class="o-btn-xs" onclick="closeModal('poModalBg')">✕</button>
+    </div>
+    <div class="o-modal-body">
+      <div class="o-input-grp">
+        <label>Proveedor</label>
+        <select id="mPoVendor">
+          <option value="EFC">EFC S.A.C. (RUC 20503141389 · Base A)</option>
+          <option value="SOLTRAK">Soltrak S.A. (RUC 20511914125 · Base A)</option>
+          <option value="SODIMAC">Sodimac Venta a Empresas (&lt; S/ 500 Prepago)</option>
+          <option value="INFORMAL">Puesto Av. Argentina (No Homologado)</option>
+        </select>
+      </div>
+      <div class="o-input-grp">
+        <label>Descripción</label>
+        <input id="mPoDesc" type="text" value="Abrasivos Bosch + Pernos G8.8">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="o-input-grp">
+          <label>Monto c/IGV (S/)</label>
+          <input id="mPoAmount" type="number" value="685">
+        </div>
+        <div class="o-input-grp">
+          <label>Medio de Pago</label>
+          <select id="mPoPay">
+            <option value="CREDITO">Crédito 30 días Marco</option>
+            <option value="PREPAGO">Prepago Corporativa (&lt; S/ 500)</option>
+            <option value="EFECTIVO">Efectivo en Calle</option>
+          </select>
+        </div>
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;margin-top:4px;">
+        <input type="checkbox" id="mPoQuotes" checked> Adjuntar 2–3 cotizaciones comparadas (&gt;= S/ 500)
+      </label>
+    </div>
+    <div class="o-modal-foot">
+      <button class="o-btn" onclick="closeModal('poModalBg')">Cancelar</button>
+      <button class="o-btn o-btn-primary" onclick="submitNewPo()">Confirmar en Odoo</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const USERS = {
+  edgar:    { av:'ED', col:'#017E84', title:'Edgar (#5 Almacén Ate)', allow:['Kardex Ate','Kanban QR','Sellar Kits','Recepción Guía'], deny:['Aprobar >=S/500','Pagar'] },
+  edwin:    { av:'EC', col:'#2563EB', title:'Edwin Copy (#3 Planif.)', allow:['Programar OT','Disparar BoM','0h Calle'], deny:['Pagar','Efectivo'] },
+  angel:    { av:'AN', col:'#D97706', title:'Ángel (#4 Sup. SST)', allow:['Canje EPP 1x1','Tools Bosch QR','Ley 29783'], deny:['Aprobar >=S/500'] },
+  victor:   { av:'VH', col:'#714B67', title:'Víctor Hugo (#2 Compras)', allow:['OC Marco','3-Way Match','Export SERCOINT'], deny:['Recibir en Ate'] },
+  jhon:     { av:'JE', col:'#059669', title:'Jhon Escalante (#1 Ger.)', allow:['1-Clic >=S/500','Pago Banco','6 Reportes'], deny:['Compras en calle'] },
+  sercoint: { av:'SC', col:'#334155', title:'SERCOINT (Externo)', allow:['Auditoría SUNAT','Lotes 3-WM OK'], deny:['Operar Taller'] }
+};
+
+let S = {};
+
+function resetDemo() {
+  S = {
+    app: 'inventario',
+    viewMode: 'kanban',
+    statusFilter: 'ALL',
+    rackFilter: 'ALL',
+    user: 'edgar',
+    modalBinId: 'BIN-14',
+    selKitIdx: 0,
+    kitTab: 'bom',
+    eppReturned: false,
+    selPoIdx: 0,
+    phase2On: false,
+    phase3On: false,
+    tourStep: -1,
+    bins: [
+      { id:'BIN-14', rack:'E1', name:'Pernos Hex. G8.8 M12x40', vendor:'EFC S.A.C.', stock:6, rop:15, max:40, unit:'jgo', price:4.5 },
+      { id:'BIN-03', rack:'E1', name:'Tuercas Autoblocantes M12', vendor:'EFC S.A.C.', stock:32, rop:12, max:40, unit:'jgo', price:2.2 },
+      { id:'BIN-08', rack:'E2', name:'Escobillas Motor ABUS 24V', vendor:'EFC S.A.C.', stock:4, rop:4, max:12, unit:'jgo', price:38.0 },
+      { id:'BIN-01', rack:'E2', name:'Limpia Contactos CRC 400ml', vendor:'EFC S.A.C.', stock:14, rop:6, max:18, unit:'uds', price:24.0 },
+      { id:'BIN-05', rack:'E2', name:'Discos Desbaste 4.5" Inox', vendor:'EFC S.A.C.', stock:26, rop:15, max:50, unit:'uds', price:6.2 },
+      { id:'BIN-19', rack:'E3', name:'Guantes Nitrilo Alta Abrasión', vendor:'Soltrak S.A.', stock:9, rop:10, max:30, unit:'par', price:9.5 },
+      { id:'BIN-21', rack:'E3', name:'Casco MSA V-Gard + Barbiquejo', vendor:'Soltrak S.A.', stock:11, rop:4, max:12, unit:'uds', price:52.0 },
+      { id:'BIN-24', rack:'E3', name:'Borneras Control 10A DIN', vendor:'EFC S.A.C.', stock:28, rop:10, max:35, unit:'uds', price:11.0 }
+    ],
+    kits: [
+      { id:'KIT-02', ot:'OT-089 · Siderperú', sla:'Lima T-24h', stage:1, tool:'QR-BOS-04 · Taladro Bosch', items:[
+        { txt:'10x Pernos G8.8 M12x40', ok:true },
+        { txt:'4x Discos 4.5" Inox', ok:true },
+        { txt:'1x Limpia Contactos CRC', ok:true },
+        { txt:'1x Casco MSA (Canje 1x1)', ok:false }
+      ]},
+      { id:'KIT-05', ot:'OT-090 · Yanacocha', sla:'Prov. T-72h', stage:2, tool:'QR-FLU-02 · Fluke 117', items:[
+        { txt:'2x Borneras Control DIN', ok:true },
+        { txt:'2x Escobillas Motor ABUS', ok:true },
+        { txt:'2x Arnés Dieléctrico ANSI', ok:true }
+      ]},
+      { id:'KIT-01', ot:'OT-088 · DP World', sla:'Lima T-24h', stage:3, tool:'QR-BOS-01 · Amoladora Bosch', items:[
+        { txt:'1x Grasa EP2 (Cartucho)', ok:true },
+        { txt:'1x Guantes Nitrilo Soltrak', ok:true }
+      ]}
+    ],
+    tools: [
+      { qr:'QR-BOS-04', name:'Taladro Bosch GSB 18V-50', ot:'Taller Ate', ok:true },
+      { qr:'QR-BOS-01', name:'Amoladora Bosch GWS 9-125', ot:'OT-088 DP World', ok:false },
+      { qr:'QR-FLU-02', name:'Multímetro Fluke 117 CAT III', ot:'OT-090 Yanacocha', ok:false }
+    ],
+    pos: [
+      { id:'OC-2026-0142', vendor:'EFC S.A.C. (Base A)', desc:'Reposición BIN-14 + Discos Bosch', amt:685, quotes:true, approved:false, guia:false, fac:false, sercoint:false },
+      { id:'OC-2026-0141', vendor:'Soltrak S.A. (Base A)', desc:'Cascos MSA + Botines Composite S3', amt:465, quotes:false, approved:true, guia:true, fac:true, sercoint:true },
+      { id:'OC-2026-0140', vendor:'Sodimac Prepago (<500)', desc:'Abrazaderas urgencia fin de semana', amt:189, quotes:false, approved:true, guia:true, fac:false, sercoint:false }
+    ],
+    feed: [
+      { u:'edgar', t:'hace 2m', msg:'<strong>BIN-14</strong> bajó a 6 uds (ROJO). Listo para escaneo QR.' },
+      { u:'edwin', t:'hace 10m', msg:'Programó <strong>OT-089 Siderperú</strong> (Caja Kit T-24h).' }
+    ]
+  };
+  document.getElementById('tourDock').classList.remove('show');
+  switchUser('edgar', true);
+  openApp('inventario');
+}
+
+function logChatter(msg, uKey) {
+  const uk = uKey || S.user;
+  const ts = new Date().toTimeString().slice(0,5);
+  S.feed.unshift({ u: uk, t: ts, msg });
+  renderChatter();
+}
+
+function toast(cls, msg) {
+  const el = document.getElementById('oToast');
+  el.className = `o-toast show ${cls}`;
+  el.innerHTML = msg;
+  clearTimeout(window._tt);
+  window._tt = setTimeout(() => el.classList.remove('show'), 3600);
+}
+
+function switchUser(uid, silent) {
+  S.user = uid;
+  document.getElementById('userSelect').value = uid;
+  const u = USERS[uid];
+  const av = document.getElementById('sysAvatar');
+  av.textContent = u.av; av.style.background = u.col;
+  document.getElementById('chatterUserTitle').textContent = u.title;
+  document.getElementById('chatterPerms').innerHTML =
+    u.allow.map(p => `<span class="o-chip allow">✓ ${p}</span>`).join('') +
+    u.deny.map(p => `<span class="o-chip deny">✕ ${p}</span>`).join('');
+  if (!silent) logChatter(`Sesión cambiada a <strong>${u.title}</strong>`);
+  else renderChatter();
+}
+
+function renderChatter() {
+  document.getElementById('chatterFeed').innerHTML = S.feed.slice(0, 20).map(f => {
+    const u = USERS[f.u] || USERS.edgar;
+    return `
+      <div class="o-msg">
+        <div class="o-msg-av" style="background:${u.col}">${u.av}</div>
+        <div class="o-msg-body">
+          <div class="o-msg-meta"><strong>${u.title.split('(')[0].trim()}</strong> · ${f.t}</div>
+          <div>${f.msg}</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function addCustomNote() {
+  logChatter('Nota interna: Verificado en Comité Quincenal Odoo (0 desviaciones).');
+  toast('info', '📝 Nota agregada al historial auditado de Odoo.');
+}
+
+function toggleAppDrawer() { document.getElementById('appDrawer').classList.toggle('show'); }
+function openAppFromDrawer(app) { toggleAppDrawer(); openApp(app); }
+function previewFutureApp(phase, name) {
+  toggleAppDrawer();
+  openApp('tableros');
+  if (phase === 2) S.phase2On = true;
+  if (phase === 3) S.phase3On = true;
+  renderMain();
+  toast('info', `🚀 Vista modular Cap. 11: <strong>${name}</strong> listo para activarse sobre la misma base Odoo.`);
+  logChatter(`Vista modular Fase ${phase}: <strong>${name}</strong>`);
+}
+
+function openApp(app) {
+  S.app = app;
+  const titles = { inventario:'Inventario QR', kits:'Kits BoM & SST', compras:'Compras Base A', tableros:'Tableros BI' };
+  document.getElementById('navAppTitle').textContent = titles[app];
+  document.querySelectorAll('.o-menu-item').forEach((b, i) => {
+    b.classList.toggle('active', ['inventario','kits','compras','tableros'][i] === app);
+  });
+  renderControlPanel();
+  renderMain();
+}
+
+function binStatus(b) {
+  if (b.stock <= Math.floor(b.rop * 0.65)) return 'ROJO';
+  if (b.stock <= b.rop) return 'AMARILLO';
+  return 'VERDE';
+}
+
+function setStatusFilter(st) { S.statusFilter = st; renderControlPanel(); renderMain(); }
+function setRackFilter(r) { S.rackFilter = r; renderMain(); }
+function setViewMode(m) { S.viewMode = m; renderControlPanel(); renderMain(); }
+
+function renderControlPanel() {
+  const cpLeft = document.getElementById('cpActions');
+  const searchWrap = document.getElementById('cpSearchWrap');
+  const pager = document.getElementById('cpPager');
+  const views = document.getElementById('cpViews');
+  const pend = S.bins.filter(b => binStatus(b) !== 'VERDE').length;
+  document.getElementById('alertBell').textContent = pend;
+
+  document.getElementById('chipAll').classList.toggle('active', S.statusFilter === 'ALL');
+  document.getElementById('chipRop').classList.toggle('active', S.statusFilter === 'ROP');
+  document.getElementById('chipOk').classList.toggle('active', S.statusFilter === 'OK');
+  document.getElementById('vBtnKanban').classList.toggle('active', S.viewMode === 'kanban');
+  document.getElementById('vBtnList').classList.toggle('active', S.viewMode === 'list');
+
+  if (S.app === 'inventario') {
+    cpLeft.innerHTML = `
+      <button class="o-btn o-btn-teal" onclick="openQrModal('BIN-14')">📷 Escanear QR</button>
+      <button class="o-btn" onclick="autoReorderAll()">⚡ Reorden ROP</button>
+      <div class="o-breadcrumb">Inventario <span>/ Gavetas Kanban</span></div>`;
+    searchWrap.style.visibility = 'visible';
+    views.style.display = 'flex';
+    pager.textContent = `1–${S.bins.length} / 24 gavetas`;
+  } else if (S.app === 'kits') {
+    cpLeft.innerHTML = `
+      <button class="o-btn o-btn-primary" onclick="sealCurrentKit()">📦 Sellar Caja Kit</button>
+      <button class="o-btn" onclick="S.kitTab='epp';renderMain()">🦺 Canje EPP 1x1</button>
+      <div class="o-breadcrumb">Kits BoM <span>/ ${S.kits[S.selKitIdx].id}</span></div>`;
+    searchWrap.style.visibility = 'hidden';
+    views.style.display = 'none';
+    pager.textContent = `${S.selKitIdx+1} / ${S.kits.length} OTs`;
+  } else if (S.app === 'compras') {
+    cpLeft.innerHTML = `
+      <button class="o-btn o-btn-primary" onclick="openNewPoModal()">+ Nueva OC</button>
+      <button class="o-btn o-btn-teal" onclick="exportAllSercoint()">📤 Exportar SERCOINT</button>
+      <div class="o-breadcrumb">Compras Base A <span>/ ${S.pos[S.selPoIdx].id}</span></div>`;
+    searchWrap.style.visibility = 'hidden';
+    views.style.display = 'none';
+    pager.textContent = `${S.pos.length} órdenes`;
+  } else {
+    cpLeft.innerHTML = `
+      <button class="o-btn o-btn-primary" onclick="toast('ok','📊 6 Reportes Cap. 10 actualizados en vivo sin Excel.')">↻ Actualizar KPIs</button>
+      <div class="o-breadcrumb">Tableros Cap. 10 <span>/ Esquema Modular Cap. 11</span></div>`;
+    searchWrap.style.visibility = 'hidden';
+    views.style.display = 'none';
+    pager.textContent = 'Año 1 · Fase 1';
+  }
+}
+
+function renderMain() {
+  const m = document.getElementById('mainWorkspace');
+  if (S.app === 'inventario') m.innerHTML = renderInventoryView();
+  else if (S.app === 'kits') m.innerHTML = renderKitsView();
+  else if (S.app === 'compras') m.innerHTML = renderComprasView();
+  else m.innerHTML = renderTablerosView();
+}
+
+/* APP 1: INVENTARIO */
+function renderInventoryView() {
+  const q = (document.getElementById('searchInput').value || '').toLowerCase();
+  const list = S.bins.filter(b => {
+    const st = binStatus(b);
+    if (S.statusFilter === 'ROP' && st === 'VERDE') return false;
+    if (S.statusFilter === 'OK' && st !== 'VERDE') return false;
+    if (S.rackFilter !== 'ALL' && b.rack !== S.rackFilter) return false;
+    if (q && !(b.id + ' ' + b.name + ' ' + b.vendor).toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  const rackBar = `
+    <div class="o-kanban-toolbar">
+      <div class="o-pill-group">
+        ${[['ALL','Todos (3 Estantes)'],['E1','Estante 1 · Pernería'],['E2','Estante 2 · Químicos/Abrasivos'],['E3','Estante 3 · EPP/Eléctrico']].map(([k,lbl]) =>
+          `<button class="o-filter-pill ${S.rackFilter===k?'active':''}" onclick="setRackFilter('${k}')">${lbl}</button>`
+        ).join('')}
+      </div>
+      <span class="o-tag info">Taller Ate · Físico S/ 1,800</span>
+    </div>`;
+
+  if (S.viewMode === 'list') {
+    return rackBar + `
+      <div class="o-list-wrap">
+        <table class="o-tbl">
+          <thead><tr><th>Gaveta</th><th>Material Pareto</th><th>Proveedor Base A</th><th>Stock / Max (ROP)</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody>
+            ${list.map(b => {
+              const st = binStatus(b);
+              return `<tr>
+                <td><strong>${b.id}</strong> (${b.rack})</td>
+                <td>${b.name}</td>
+                <td>${b.vendor}</td>
+                <td><strong>${b.stock}</strong> / ${b.max} ${b.unit} (ROP ${b.rop})</td>
+                <td><span class="o-tag ${st}">${st}</span></td>
+                <td>
+                  <button class="o-btn-xs" onclick="adjBin('${b.id}',-5)">-5</button>
+                  <button class="o-btn-xs" onclick="adjBin('${b.id}',10)">+10</button>
+                  <button class="o-btn-xs teal" onclick="openQrModal('${b.id}')">📷 QR</button>
+                  ${st!=='VERDE'?`<button class="o-btn-xs red" onclick="dispatchSolped('${b.id}')">⚡ SOLPED</button>`:''}
+                </td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+
+  return rackBar + `
+    <div class="o-kanban-grid">
+      ${list.map(b => {
+        const st = binStatus(b);
+        const pct = Math.min(100, Math.round(b.stock / b.max * 100));
+        const col = st==='VERDE' ? '#10B981' : st==='AMARILLO' ? '#F59E0B' : '#EF4444';
+        return `
+          <div class="o-kcard ${st}">
+            <div class="o-khead">
+              <span class="o-kcode">${b.id} · ${b.rack}</span>
+              <span class="o-tag ${st}">${st}</span>
+            </div>
+            <div class="o-ktitle">${b.name}</div>
+            <div class="o-kmeta">
+              <span><strong>${b.stock}</strong>/${b.max} ${b.unit} (ROP ${b.rop})</span>
+              <span>${b.vendor}</span>
+            </div>
+            <div class="o-gauge"><div class="o-gauge-fill" style="width:${pct}%;background:${col}"></div></div>
+            <div class="o-kfoot">
+              <div>
+                <button class="o-btn-xs" onclick="adjBin('${b.id}',-5)">-5</button>
+                <button class="o-btn-xs" onclick="adjBin('${b.id}',10)">+10</button>
+              </div>
+              <div>
+                <button class="o-btn-xs teal" onclick="openQrModal('${b.id}')">📷 QR</button>
+                ${st!=='VERDE'?`<button class="o-btn-xs red" onclick="dispatchSolped('${b.id}')">⚡ SOLPED</button>`:''}
+              </div>
+            </div>
+          </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function adjBin(id, delta) {
+  const b = S.bins.find(x => x.id === id);
+  if (!b) return;
+  b.stock = Math.max(0, Math.min(b.max, b.stock + delta));
+  const st = binStatus(b);
+  renderControlPanel();
+  renderMain();
+  logChatter(`${b.id} ajustado a <strong>${b.stock} ${b.unit}</strong> (${st}).`);
+  if (delta < 0 && st !== 'VERDE') toast('err', `⚠️ ${b.id} en ${st} (${b.stock}/${b.rop}). Pulse ⚡ SOLPED.`);
+}
+
+function dispatchSolped(id) {
+  const b = S.bins.find(x => x.id === id);
+  if (!b) return;
+  const qty = b.max - b.stock;
+  const amt = Math.round(qty * b.price * 1.18);
+  const newId = 'OC-2026-0' + (143 + S.pos.length);
+  S.pos.unshift({ id:newId, vendor:`${b.vendor} (Base A)`, desc:`Reposición ${b.id} · ${b.name} (${qty} ${b.unit})`, amt, quotes:false, approved:amt<500, guia:false, fac:false, sercoint:false });
+  logChatter(`SOLPED Push <strong>${b.id}</strong> → Generó <strong>${newId}</strong> (S/ ${amt}) hacia ${b.vendor}.`, 'edgar');
+  toast('ok', `⚡ ${newId} creada automáticamente hacia ${b.vendor} (S/ ${amt}). 0h calle.`);
+  renderControlPanel();
+}
+
+function autoReorderAll() {
+  const rojos = S.bins.filter(b => binStatus(b) !== 'VERDE');
+  if (!rojos.length) { toast('ok', '✓ Todas las gavetas están en VERDE.'); return; }
+  rojos.forEach(b => dispatchSolped(b.id));
+  toast('ok', `⚡ ${rojos.length} SOLPEDs enviadas a Base A desde Estantes Kanban Ate.`);
+}
+
+function openQrModal(id) {
+  const b = S.bins.find(x => x.id === id) || S.bins[0];
+  S.modalBinId = b.id;
+  document.getElementById('qrCodeLbl').textContent = `${b.id} (${b.rack})`;
+  document.getElementById('qrNameLbl').textContent = b.name;
+  document.getElementById('qrMetaLbl').textContent = `ROP ${b.rop} ${b.unit} | ${b.vendor}`;
+  document.getElementById('qrModalBg').classList.add('show');
+}
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+function scanQrTrigger() {
+  const b = S.bins.find(x => x.id === S.modalBinId);
+  closeModal('qrModalBg');
+  if (b && binStatus(b) === 'VERDE') b.stock = Math.max(1, b.rop - 2);
+  dispatchSolped(b.id);
+  renderMain();
+}
+
+/* APP 2: KITS BoM + EPP 1x1 + TOOLS QR */
+function renderKitsView() {
+  const k = S.kits[S.selKitIdx];
+  const stages = ['Programada', 'BoM en Ate', 'Sellada T-24h', 'En Planta 0h'];
+  const doneCnt = k.items.filter(i => i.ok).length;
+
+  let tabContent = '';
+  if (S.kitTab === 'bom') {
+    tabContent = `
+      <table class="o-tbl">
+        <thead><tr><th style="width:40px;">Listo</th><th>Componente BoM de Caja Kit</th><th>Estado</th></tr></thead>
+        <tbody>
+          ${k.items.map((it, idx) => `
+            <tr>
+              <td><input type="checkbox" ${it.ok?'checked':''} onchange="toggleKitItem(${idx})" style="width:15px;height:15px;accent-color:var(--o-teal);cursor:pointer;"></td>
+              <td><strong>${it.txt}</strong></td>
+              <td><span class="o-tag ${it.ok?'ok':'warn'}">${it.ok?'En Caja Sellada':'Falta Alistar'}</span></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`;
+  } else if (S.kitTab === 'epp') {
+    tabContent = `
+      <div style="display:grid;gap:12px;">
+        <div class="o-fields-grid" style="margin-bottom:0;">
+          <div class="o-field-row"><span class="o-flbl">Técnico (RxH)</span><select id="eppTech" style="border:none;border-bottom:1px solid #CBD5E1;padding:3px;"><option>C. Mendoza (Grúas)</option><option>L. Huamán (Soldador)</option></select></div>
+          <div class="o-field-row"><span class="o-flbl">EPP Soltrak</span><select id="eppProd" style="border:none;border-bottom:1px solid #CBD5E1;padding:3px;"><option>Casco MSA V-Gard (ANSI)</option><option>Guantes Nitrilo</option><option>Botín Composite S3</option></select></div>
+        </div>
+        <label class="o-switch-wrap">
+          <input type="checkbox" ${S.eppReturned?'checked':''} onchange="S.eppReturned=this.checked;renderMain()">
+          Devolución física del EPP usado recibida (Ley N.° 29783 · Valida Ángel #4)
+        </label>
+        <div>
+          <button class="o-btn o-btn-primary" onclick="validateEpp()">✓ Entregar EPP Nuevo (Canje 1 por 1)</button>
+        </div>
+      </div>`;
+  } else {
+    tabContent = `
+      <table class="o-tbl">
+        <thead><tr><th>QR Serie</th><th>Herramienta Genuina (Bosch/Fluke)</th><th>Ubicación / OT</th><th>Acción</th></tr></thead>
+        <tbody>
+          ${S.tools.map((t, i) => `
+            <tr>
+              <td><strong>${t.qr}</strong></td>
+              <td>${t.name}</td>
+              <td><span class="o-tag ${t.ok?'ok':'info'}">${t.ot}</span></td>
+              <td><button class="o-btn-xs teal" onclick="toggleTool(${i})">${t.ok?'Asignar OT-089':'Retornar QR Ate'}</button></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  return `
+    <div class="o-form-wrap">
+      <div class="o-record-list">
+        ${S.kits.map((x, idx) => `
+          <div class="o-rec-item ${idx===S.selKitIdx?'active':''}" onclick="S.selKitIdx=${idx};renderControlPanel();renderMain()">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <strong>${x.id}</strong>
+              <span class="o-tag ${x.stage>=2?'ok':'warn'}">${x.sla}</span>
+            </div>
+            <div style="font-size:11.5px;color:var(--o-muted);">${x.ot}</div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="o-sheet">
+        <div class="o-statusbar">
+          <div class="o-action-btns">
+            <button class="o-btn o-btn-primary" onclick="sealCurrentKit()">📦 Sellar Caja Kit</button>
+            <button class="o-btn o-btn-teal" onclick="S.kitTab='epp';renderMain()">🦺 Validar EPP 1x1</button>
+            <button class="o-btn" onclick="dispatchKit()">🚚 Despachar a Planta</button>
+          </div>
+          <div class="o-pipeline">
+            ${stages.map((st, idx) => `<span class="o-stage ${idx<k.stage?'done':idx===k.stage?'current':''}">${st}</span>`).join('')}
+          </div>
+        </div>
+        <div class="o-sheet-body">
+          <div class="o-sheet-head">
+            <div>
+              <div class="o-doc-title">${k.id} · ${k.ot}</div>
+              <div class="o-doc-sub">Planifica Edwin Copy (#3) · Sella Edgar (#5 Ate)</div>
+            </div>
+            <div class="o-smart-btns">
+              <button class="o-smart-btn" onclick="S.kitTab='bom';renderMain()"><span>📦</span><div><span class="o-smart-val">${doneCnt}/${k.items.length}</span><span class="o-smart-lbl">Ítems BoM</span></div></button>
+              <button class="o-smart-btn" onclick="S.kitTab='epp';renderMain()"><span>🦺</span><div><span class="o-smart-val">${S.eppReturned?'OK':'Candado'}</span><span class="o-smart-lbl">EPP 1x1</span></div></button>
+              <button class="o-smart-btn" onclick="S.kitTab='tools';renderMain()"><span>🛠️</span><div><span class="o-smart-val">${S.tools.length} QR</span><span class="o-smart-lbl">Bosch Genuino</span></div></button>
+              <button class="o-smart-btn"><span>⏱️</span><div><span class="o-smart-val">0.00 HH</span><span class="o-smart-lbl">En Calle</span></div></button>
+            </div>
+          </div>
+
+          <div class="o-fields-grid">
+            <div class="o-field-row"><span class="o-flbl">Ventana SLA</span><span class="o-fval"><strong>${k.sla}</strong></span></div>
+            <div class="o-field-row"><span class="o-flbl">Equipo QR Ligado</span><span class="o-fval">${k.tool}</span></div>
+          </div>
+
+          <div class="o-notebook-tabs">
+            <button class="o-nb-tab ${S.kitTab==='bom'?'active':''}" onclick="S.kitTab='bom';renderMain()">Componentes BoM</button>
+            <button class="o-nb-tab ${S.kitTab==='epp'?'active':''}" onclick="S.kitTab='epp';renderMain()">Canje EPP 1x1 (Ley 29783)</button>
+            <button class="o-nb-tab ${S.kitTab==='tools'?'active':''}" onclick="S.kitTab='tools';renderMain()">Custodia Tools Bosch QR</button>
+          </div>
+          ${tabContent}
+        </div>
+      </div>
+    </div>`;
+}
+
+function toggleKitItem(idx) {
+  const it = S.kits[S.selKitIdx].items[idx];
+  it.ok = !it.ok;
+  renderMain();
+}
+function sealCurrentKit() {
+  const k = S.kits[S.selKitIdx];
+  k.items.forEach(i => i.ok = true);
+  k.stage = Math.max(k.stage, 2);
+  renderMain();
+  logChatter(`<strong>${k.id} (${k.ot})</strong> sellada lista en Ate (${k.sla}).`, 'edgar');
+  toast('ok', `📦 ${k.id} sellada. Cuadrilla retira directo (0h en calle).`);
+}
+function dispatchKit() {
+  const k = S.kits[S.selKitIdx];
+  k.stage = 3;
+  renderMain();
+  logChatter(`Cuadrilla retiró <strong>${k.id}</strong> rumbo a planta cliente (0.00 HH compras).`, 'edwin');
+  toast('ok', `🚚 ${k.id} despachada a cliente sin pasar por Las Malvinas.`);
+}
+function validateEpp() {
+  if (!S.eppReturned) {
+    toast('err', '🚫 BLOQUEO REGLA 3: Marque la devolución física del EPP usado (Ley N.° 29783).');
+    logChatter('Bloqueo EPP 1x1: técnico no devolvió equipo usado.', 'angel');
+    return;
+  }
+  const prod = document.getElementById('eppProd').value;
+  toast('ok', `✅ Canje 1x1 aprobado gratis por Ángel (#4): ${prod}. Vida útil 12m.`);
+  logChatter(`Canje EPP 1x1 aprobado (${prod}). Vida útil controlada 12m.`, 'angel');
+}
+function toggleTool(i) {
+  const t = S.tools[i];
+  t.ok = !t.ok;
+  t.ot = t.ok ? 'Taller Ate' : 'OT-089 Siderperú';
+  renderMain();
+  logChatter(`${t.qr} -> ${t.ot}`, 'angel');
+}
+
+/* APP 3: COMPRAS BASE A + 3-WAY MATCH + SERCOINT */
+function renderComprasView() {
+  const p = S.pos[S.selPoIdx];
+  const matched = p.approved && p.guia && p.fac;
+  let stageIdx = 0;
+  if (p.approved) stageIdx = 1;
+  if (p.guia) stageIdx = 2;
+  if (matched) stageIdx = 3;
+  if (p.sercoint) stageIdx = 4;
+
+  const stages = ['Clip S/500', 'Aprobada Jhon', 'Guía Ate', '3-Way Match', 'SERCOINT'];
+
+  return `
+    <div class="o-form-wrap">
+      <div class="o-record-list">
+        ${S.pos.map((o, idx) => `
+          <div class="o-rec-item ${idx===S.selPoIdx?'active':''}" onclick="S.selPoIdx=${idx};renderControlPanel();renderMain()">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <strong>${o.id}</strong>
+              <span class="o-tag ${o.sercoint?'ok':o.approved?'info':'warn'}">S/ ${o.amt}</span>
+            </div>
+            <div style="font-size:11px;color:var(--o-muted);">${o.vendor}</div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="o-sheet">
+        <div class="o-statusbar">
+          <div class="o-action-btns">
+            ${!p.approved ? `<button class="o-btn o-btn-primary" onclick="approvePo(${S.selPoIdx})">✓ Aprobar 1-Clic (Jhon)</button>` : ''}
+            ${!p.guia ? `<button class="o-btn o-btn-teal" onclick="receiveAtAte(${S.selPoIdx})">📦 Recepción Guía Ate (Edgar)</button>` : ''}
+            ${!p.fac ? `<button class="o-btn" onclick="attachInvoice(${S.selPoIdx})">🧾 Cruzar Factura XML</button>` : ''}
+            <button class="o-btn ${matched?'o-btn-primary':'o-btn-danger'}" onclick="attemptPay(${S.selPoIdx})">💳 Autorizar Pago</button>
+            <button class="o-btn" onclick="exportSingleSercoint(${S.selPoIdx})">📤 Exportar SERCOINT</button>
+          </div>
+          <div class="o-pipeline">
+            ${stages.map((st, idx) => `<span class="o-stage ${idx<stageIdx?'done':idx===stageIdx?'current':''}">${st}</span>`).join('')}
+          </div>
+        </div>
+
+        <div class="o-sheet-body">
+          <div class="o-sheet-head">
+            <div>
+              <div class="o-doc-title">${p.id}</div>
+              <div class="o-doc-sub">${p.desc}</div>
+            </div>
+            <div class="o-smart-btns">
+              <button class="o-smart-btn" onclick="approvePo(${S.selPoIdx})"><span>⚖️</span><div><span class="o-smart-val">${p.amt>=500?'>= S/500':'< S/500'}</span><span class="o-smart-lbl">${p.approved?'Aprobada':'Pend. 1-Clic'}</span></div></button>
+              <button class="o-smart-btn" onclick="receiveAtAte(${S.selPoIdx})"><span>🚚</span><div><span class="o-smart-val">${p.guia?'Recibida':'Pend.'}</span><span class="o-smart-lbl">Guía Ate</span></div></button>
+              <button class="o-smart-btn" onclick="attachInvoice(${S.selPoIdx})"><span>🧾</span><div><span class="o-smart-val">${p.fac?'XML OK':'Pend.'}</span><span class="o-smart-lbl">Factura</span></div></button>
+              <button class="o-smart-btn" onclick="exportSingleSercoint(${S.selPoIdx})"><span>🏛️</span><div><span class="o-smart-val">${p.sercoint?'Enviada':'Espera'}</span><span class="o-smart-lbl">SERCOINT</span></div></button>
+            </div>
+          </div>
+
+          <div class="o-fields-grid">
+            <div class="o-field-row"><span class="o-flbl">Proveedor Base A</span><span class="o-fval"><strong>${p.vendor}</strong></span></div>
+            <div class="o-field-row"><span class="o-flbl">Total c/IGV</span><span class="o-fval"><strong>S/ ${p.amt}.00</strong></span></div>
+            <div class="o-field-row"><span class="o-flbl">Regla 1 (Clip S/500)</span><span class="o-fval">${p.amt>=500?'2–3 cotizaciones + 1-clic Jhon (#1)':'OC Marco rápida (< S/ 500)'}</span></div>
+            <div class="o-field-row"><span class="o-flbl">Regla 2 (3-Way Match)</span><span class="o-fval"><span class="o-tag ${matched?'ok':'err'}">${matched?'3 Documentos Conciliados':'Bloqueo Pago Activo'}</span></span></div>
+          </div>
+
+          <table class="o-tbl">
+            <thead><tr><th>Documento Obligatorio</th><th>Responsable en Odoo</th><th>Estado</th><th>Acción Rápida</th></tr></thead>
+            <tbody>
+              <tr><td>1. Orden de Compra Formal</td><td>Víctor Hugo (#2) / Jhon (#1)</td><td><span class="o-tag ${p.approved?'ok':'warn'}">${p.approved?'Confirmada':'Por Aprobar'}</span></td><td>${!p.approved?`<button class="o-btn-xs teal" onclick="approvePo(${S.selPoIdx})">Aprobar 1-Clic</button>`:'✓'}</td></tr>
+              <tr><td>2. Guía Remisión Taller Ate (24–48h)</td><td>Edgar (#5 Almacén Ate)</td><td><span class="o-tag ${p.guia?'ok':'warn'}">${p.guia?'Ingresada Kardex':'Pendiente'}</span></td><td>${!p.guia?`<button class="o-btn-xs teal" onclick="receiveAtAte(${S.selPoIdx})">Recepcionar Ate</button>`:'✓'}</td></tr>
+              <tr><td>3. Factura Electrónica XML</td><td>Víctor Hugo (#2) → SERCOINT</td><td><span class="o-tag ${p.fac?'ok':'warn'}">${p.fac?'Verificada':'Pendiente'}</span></td><td>${!p.fac?`<button class="o-btn-xs teal" onclick="attachInvoice(${S.selPoIdx})">Validar XML</button>`:'✓'}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+}
+
+function openNewPoModal() { document.getElementById('poModalBg').classList.add('show'); }
+function submitNewPo() {
+  const v = document.getElementById('mPoVendor').value;
+  const desc = document.getElementById('mPoDesc').value || 'Materiales MRO';
+  const amt = Number(document.getElementById('mPoAmount').value || 0);
+  const pay = document.getElementById('mPoPay').value;
+  const quotes = document.getElementById('mPoQuotes').checked;
+
+  if (v === 'INFORMAL' || pay === 'EFECTIVO') {
+    toast('err', '🚫 BLOQUEO REGLA 1: Prohibido efectivo o puestos informales en Av. Argentina.');
+    logChatter(`Bloqueada compra informal/efectivo (S/ ${amt}).`, 'victor');
+    return;
+  }
+  if (v === 'SODIMAC' && amt >= 500) {
+    toast('err', '🚫 BLOQUEO SODIMAC: Tarjeta prepago corporativa es exclusiva para < S/ 500.');
+    return;
+  }
+  if (amt >= 500 && !quotes) {
+    toast('err', '🚫 REGLA 1: Compras >= S/ 500 exigen 2–3 cotizaciones comparadas.');
+    return;
+  }
+
+  const label = v==='EFC'?'EFC S.A.C. (Base A)':v==='SOLTRAK'?'Soltrak S.A. (Base A)':'Sodimac Prepago (<500)';
+  const id = 'OC-2026-0' + (143 + S.pos.length);
+  S.pos.unshift({ id, vendor:label, desc, amt, quotes, approved:amt<500, guia:false, fac:false, sercoint:false });
+  S.selPoIdx = 0;
+  closeModal('poModalBg');
+  renderControlPanel();
+  renderMain();
+  toast('ok', `✅ ${id} creada (${label}) por S/ ${amt}.`);
+  logChatter(`Nueva <strong>${id}</strong> creada por S/ ${amt} (${label}).`, 'victor');
+}
+
+function approvePo(i) {
+  S.pos[i].approved = true;
+  renderMain();
+  logChatter(`<strong>${S.pos[i].id}</strong> aprobada en 1 clic por Gerencia.`, 'jhon');
+  toast('ok', `✓ ${S.pos[i].id} aprobada en 1 clic por Jhon Escalante (#1).`);
+}
+function receiveAtAte(i) {
+  S.pos[i].guia = true;
+  renderMain();
+  logChatter(`Guía registrada en Ate para <strong>${S.pos[i].id}</strong>.`, 'edgar');
+  toast('ok', `📦 Recepción en Ate confirmada en Odoo (${S.pos[i].id}).`);
+}
+function attachInvoice(i) {
+  S.pos[i].fac = true;
+  renderMain();
+  logChatter(`Factura XML vinculada en <strong>${S.pos[i].id}</strong>.`, 'victor');
+  toast('ok', `🧾 Factura XML cruzada en ${S.pos[i].id}.`);
+}
+function attemptPay(i) {
+  const p = S.pos[i];
+  if (!(p.approved && p.guia && p.fac)) {
+    toast('err', `🔒 PAGO BLOQUEADO (Regla 2): ${p.id} requiere OC + Guía Ate + Factura.`);
+    logChatter(`Intento de pago bloqueado en <strong>${p.id}</strong> (falta 3-Way Match).`, 'victor');
+    return;
+  }
+  toast('ok', `💳 Pago bancario autorizado para ${p.id} (3-Way Match 100% OK).`);
+  logChatter(`Pago autorizado en <strong>${p.id}</strong> tras 3-Way Match.`, 'jhon');
+}
+function exportSingleSercoint(i) {
+  const p = S.pos[i];
+  if (!(p.approved && p.guia && p.fac)) {
+    toast('err', '🔒 Complete primero OC + Guía Ate + Factura antes de exportar a SERCOINT.');
+    return;
+  }
+  p.sercoint = true;
+  renderMain();
+  logChatter(`Asiento <strong>${p.id}</strong> exportado limpio a <strong>SERCOINT</strong>.`, 'sercoint');
+  toast('ok', `📤 ${p.id} exportada a estudio contable SERCOINT.`);
+}
+function exportAllSercoint() {
+  let n = 0;
+  S.pos.forEach(p => { if (p.approved && p.guia && p.fac && !p.sercoint) { p.sercoint = true; n++; } });
+  renderMain();
+  logChatter(`Cierre mensual exportado a <strong>SERCOINT</strong> (${n} órdenes nuevas).`, 'sercoint');
+  toast('ok', `📤 Lote mensual enviado a SERCOINT (${n} conciliadas nuevas).`);
+}
+
+/* APP 4: 6 REPORTES CAP. 10 & MODULAR CAP. 11 */
+function renderTablerosView() {
+  return `
+    <div class="o-bi-grid">
+      <div class="o-bi-card">
+        <div style="display:flex;justify-content:space-between;"><strong>1. OTIF Base A</strong><span class="o-tag ok">Meta &gt;=95%</span></div>
+        <div class="o-bi-num">96.4%</div>
+        <div class="o-prog-row"><span>EFC (24–48h)</span><div class="o-prog-track"><div class="o-prog-fill" style="width:97%"></div></div><span>97%</span></div>
+        <div class="o-prog-row"><span>Soltrak EPP</span><div class="o-prog-track"><div class="o-prog-fill" style="width:95%"></div></div><span>95%</span></div>
+      </div>
+      <div class="o-bi-card">
+        <div style="display:flex;justify-content:space-between;"><strong>2. Rotación Pareto QR</strong><span class="o-tag info">52 SKUs</span></div>
+        <div class="o-bi-num">7.8x / año</div>
+        <div class="o-prog-row"><span>Gavetas Verde</span><div class="o-prog-track"><div class="o-prog-fill" style="width:88%;background:var(--o-green)"></div></div><span>88%</span></div>
+        <div class="o-prog-row"><span>En Reorden</span><div class="o-prog-track"><div class="o-prog-fill" style="width:12%;background:var(--o-amber)"></div></div><span>12%</span></div>
+      </div>
+      <div class="o-bi-card">
+        <div style="display:flex;justify-content:space-between;"><strong>3. Precio vs. Marco</strong><span class="o-tag ok">Ahorro ~20%</span></div>
+        <div class="o-bi-num">-19.4%</div>
+        <div class="o-prog-row"><span>Desv. Tarifario</span><div class="o-prog-track"><div class="o-prog-fill" style="width:15%"></div></div><span>1.4%</span></div>
+        <div style="font-size:11px;color:var(--o-muted);">S/ 6,000–7,000/año recuperados</div>
+      </div>
+      <div class="o-bi-card">
+        <div style="display:flex;justify-content:space-between;"><strong>4. Gasto Base A</strong><span class="o-tag ok">Meta &gt;=85%</span></div>
+        <div class="o-bi-num">86.5%</div>
+        <div class="o-prog-row"><span>EFC + Soltrak</span><div class="o-prog-track"><div class="o-prog-fill" style="width:86.5%"></div></div><span>86.5%</span></div>
+        <div class="o-prog-row"><span>Sodimac &lt;500</span><div class="o-prog-track"><div class="o-prog-fill" style="width:7%;background:var(--o-amber)"></div></div><span>7.0%</span></div>
+      </div>
+      <div class="o-bi-card">
+        <div style="display:flex;justify-content:space-between;"><strong>5. Vida Útil EPP / Bosch</strong><span class="o-tag ok">Ley 29783</span></div>
+        <div class="o-bi-num">12.0 meses</div>
+        <div class="o-prog-row"><span>Antes "Bamba"</span><div class="o-prog-track"><div class="o-prog-fill" style="width:25%;background:var(--o-red)"></div></div><span>3m</span></div>
+        <div class="o-prog-row"><span>Con Canje/QR</span><div class="o-prog-track"><div class="o-prog-fill" style="width:100%;background:var(--o-green)"></div></div><span>12m</span></div>
+      </div>
+      <div class="o-bi-card">
+        <div style="display:flex;justify-content:space-between;"><strong>6. Ciclo DAP &amp; Calle</strong><span class="o-tag ok">-91.3%</span></div>
+        <div class="o-bi-num">50 min</div>
+        <div class="o-prog-row"><span>AS-IS (16 HH)</span><div class="o-prog-track"><div class="o-prog-fill" style="width:100%;background:var(--o-red)"></div></div><span>575m</span></div>
+        <div class="o-prog-row"><span>TO-BE (0 HH)</span><div class="o-prog-track"><div class="o-prog-fill" style="width:9%;background:var(--o-green)"></div></div><span>50m</span></div>
+      </div>
+    </div>
+
+    <div class="o-mod-grid">
+      <div class="o-mod-card installed">
+        <div><span class="o-tag ok">ACTIVO HOY · S/ 250/mes</span><h4 style="margin-top:4px;">Fase 1: Núcleo Taller</h4><div style="font-size:11.5px;color:var(--o-muted);">Compras + Kanban QR + BoM Kits</div></div>
+        <button class="o-btn-xs" disabled>Instalado ✓</button>
+      </div>
+      <div class="o-mod-card ${S.phase2On?'installed':''}">
+        <div><span class="o-tag ${S.phase2On?'ok':'plum'}">${S.phase2On?'ACTIVADO EN PREVIEW':'FASE 2 · MESES 7–12'}</span><h4 style="margin-top:4px;">Ventas/CRM &amp; Import. ABUS</h4><div style="font-size:11.5px;color:var(--o-muted);">Grúas puente + 16 sem. Alemania</div></div>
+        <button class="o-btn-xs teal" onclick="S.phase2On=!S.phase2On;renderMain();toast('ok','🚀 Módulos Fase 2 escalados sin migrar BD.')">${S.phase2On?'Desactivar':'Simular'}</button>
+      </div>
+      <div class="o-mod-card ${S.phase3On?'installed':''}">
+        <div><span class="o-tag ${S.phase3On?'ok':'info'}">${S.phase3On?'ACTIVADO EN PREVIEW':'FASE 3 · AÑO 2+'}</span><h4 style="margin-top:4px;">Contabilidad &amp; SUNAT</h4><div style="font-size:11.5px;color:var(--o-muted);">Enlace integral con SERCOINT</div></div>
+        <button class="o-btn-xs teal" onclick="S.phase3On=!S.phase3On;renderMain();toast('ok','🏛️ Localización SUNAT Fase 3 activada.')">${S.phase3On?'Desactivar':'Simular'}</button>
+      </div>
+    </div>`;
+}
+
+/* TOUR 60 SEGUNDOS */
+const TOUR = [
+  { user:'edwin', app:'kits', txt:'Edwin (#3) alista OT-089 Siderperú (Caja Kit T-24h).', fn:()=>sealCurrentKit() },
+  { user:'edgar', app:'inventario', txt:'Edgar (#5) escanea BIN-14 (ROJO) y dispara SOLPED a EFC.', fn:()=>dispatchSolped('BIN-14') },
+  { user:'angel', app:'kits', txt:'Ángel (#4) exige devolución física EPP 1x1 y libera casco.', fn:()=>{ S.kitTab='epp'; S.eppReturned=true; renderMain(); validateEpp(); } },
+  { user:'jhon', app:'compras', txt:'Jhon (#1) aprueba OC-2026-0142 (>= S/ 500) en 1 clic.', fn:()=>approvePo(0) },
+  { user:'victor', app:'compras', txt:'Edgar recepciona Guía Ate; Víctor (#2) cierra 3-Way Match → SERCOINT.', fn:()=>{ receiveAtAte(0); attachInvoice(0); exportSingleSercoint(0); } },
+  { user:'jhon', app:'tableros', txt:'Gerencia revisa 6 Reportes Cap. 10 (50m DAP) y escala Fase 2.', fn:()=>{ S.phase2On=true; renderMain(); } }
+];
+function startTour() { S.tourStep=0; document.getElementById('tourDock').classList.add('show'); renderTour(); }
+function closeTour() { document.getElementById('tourDock').classList.remove('show'); }
+function renderTour() {
+  const st = TOUR[S.tourStep];
+  switchUser(st.user, true);
+  openApp(st.app);
+  document.getElementById('tourBadge').textContent = `${S.tourStep+1} / 6`;
+  document.getElementById('tourTxt').textContent = st.txt;
+}
+function runTourAction() { if (S.tourStep>=0) TOUR[S.tourStep].fn(); }
+function nextTour() { if (S.tourStep < TOUR.length-1) { S.tourStep++; renderTour(); } }
+function prevTour() { if (S.tourStep > 0) { S.tourStep--; renderTour(); } }
+
+window.addEventListener('DOMContentLoaded', () => {
+  resetDemo();
+  const h = location.hash.replace('#', '');
+  if (['inventario', 'kits', 'compras', 'tableros'].includes(h)) openApp(h);
+  else if (h === 'apps') toggleAppDrawer();
+});
+</script>
+</body>
+</html>
